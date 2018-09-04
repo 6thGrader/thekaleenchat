@@ -1,30 +1,30 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app); //1
-var io = require('socket.io')(http);    //1
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-app.get('/',function(req, res){  //2
+app.get('/',function(req, res) {
   res.sendFile(__dirname + '/client.html');
 });
 
 var count=1;
-io.on('connection', function(socket){ //3
-  console.log('user connected: ', socket.id);  //3-1
-  var name = "user" + count++;                 //3-1
-  io.to(socket.id).emit('change name',name);   //3-1
+io.on('connection', function(socket) {
+  console.log('user connected: ', socket.id);
+  var name = "user" + count++;
+  io.to(socket.id).emit('change name',name);
   io.emit('receive message', name+'님이 입장하셨습니다.');
 
-  socket.on('disconnect', function(){ //3-2
+  socket.on('disconnect', function() {
     console.log('user disconnected: ', socket.id);
   });
 
-  socket.on('send message', function(name,text){ //3-3
+  socket.on('send message', function(name,text) {
     var msg = name + ' : ' + text;
     console.log(msg);
     io.emit('receive message', msg);
   });
 });
 
-http.listen(process.env.PORT || 3000, function(){ //4
+http.listen(process.env.PORT || 3000, function() {
   console.log('server on!');
 });
