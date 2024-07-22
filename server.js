@@ -12,7 +12,7 @@ io.on('connection', function(socket) {
   console.log('user connected: ', socket.id);
   var name = "user" + count++;
   io.to(socket.id).emit('change name',name);
-  io.emit('receive message', name+'님이 입장하셨습니다.');
+  io.emit('receive message', name+' has connected to the server.');
 
   socket.on('disconnect', function() {
     console.log('user disconnected: ', socket.id);
